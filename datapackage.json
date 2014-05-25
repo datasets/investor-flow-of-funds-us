@@ -1,0 +1,137 @@
+{
+  "name": "investor-flow-of-funds-us",
+  "title": "Monthly net new cash flow into various mutual fund investment classes",
+  "version": "0.1.0",
+  "license": "PDDL-1.0",
+  "author": "Rufus Pollock (http://rufuspollock.org)",
+  "sources":[{
+    "name": "Investment Company Institute (ICI)",
+    "web": "http://www.ici.org/research/stats"
+  }],
+  "resources": [
+    {
+      "name": "monthly",
+      "path": "data/monthly.csv",
+      "format": "csv",
+      "description": "All figures are in millions of USD",
+      "mediatype": "text/csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "Date",
+            "type": "date",
+            "description": ""
+          },
+          {
+            "name": "Total Equity",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Domestic Equity",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "World Equity",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Hybrid",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Total Bond",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Taxable Bond",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Municipal Bond",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Total",
+            "type": "integer",
+            "description": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "weekly",
+      "path": "data/weekly.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "description": "All figures are in millions of USD",
+      "schema": {
+        "fields": [
+          {
+            "name": "Date",
+            "type": "date",
+            "description": ""
+          },
+          {
+            "name": "Total Equity",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Domestic Equity",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "World Equity",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Hybrid",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Total Bond",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Taxable Bond",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Municipal Bond",
+            "type": "integer",
+            "description": ""
+          },
+          {
+            "name": "Total",
+            "type": "integer",
+            "description": ""
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "id": "Graph",
+      "label": "Mutual Fund Flows",
+      "type": "Graph",
+      "state": {
+        "graphType": "columns",
+        "group": "Date",
+        "series": [ "Total Equity", "Total Bond" ]
+      }
+    }
+  ]
+}
