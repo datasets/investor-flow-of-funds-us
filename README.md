@@ -17,3 +17,12 @@ Notes for Long-Term Mutual Fund Flows Data:
   industry assets, while monthly flows are actual numbers as reported in ICI's
   "Trends in Mutual Fund Investing."
 
+## Preparation
+
+Run the python script:
+
+  # Install the requirements
+  pip install -r scripts/requirements.txt
+  # Now run the script
+  python scripts/process.py
+    
