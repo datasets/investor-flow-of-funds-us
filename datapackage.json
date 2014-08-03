@@ -1,6 +1,6 @@
 {
   "name": "investor-flow-of-funds-us",
-  "title": "Monthly net new cash flow into various mutual fund investment classes",
+  "title": "US Investor Flow of Funds into Investment Classes (Bonds, Equities etc)",
   "version": "0.1.0",
   "license": "PDDL-1.0",
   "author": "Rufus Pollock (http://rufuspollock.org)",

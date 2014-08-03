@@ -1,10 +1,11 @@
-Monthly net new cash flow into various mutual fund investment classes
-(equities, bonds etc). Statistics come from the Investment Company Institute
-(ICI).
+Monthly net new cash flow by US investors into various mutual fund investment
+classes (equities, bonds etc). Statistics come from the Investment Company
+Institute (ICI).
 
 ## Data
 
-Data comes from the data provided on the [ICI Statistics pages][ici], in particular:
+Data comes from the data provided on the [ICI Statistics pages][ici], in
+particular:
 
 * Summary: Estimated Long-Term Mutual Fund Flows Data (xls)
 
