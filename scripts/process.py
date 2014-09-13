@@ -59,10 +59,12 @@ def extract():
         existing.next()
         existing = [ x for x in existing ]
     # combine existing and weekly
-    # weekly stuff should be newer so algorith is:
+    # weekly stuff should be newer so algorithm is:
     # iterate through existing and add to weekly until we get
     # existing row with date equal to oldest new row and then we break
     oldest_new_week = list(weekly[0])
+    # default weekly to everything in case we do not have an overlap
+    weekly = existing + weekly
     for count,row in enumerate(existing):
         if row[0] == oldest_new_week[0]:
             weekly = existing[:count] + weekly
