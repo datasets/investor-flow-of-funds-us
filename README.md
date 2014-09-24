@@ -22,8 +22,11 @@ Notes for Long-Term Mutual Fund Flows Data:
 
 Run the python script:
 
-  # Install the requirements    
-  pip install -r scripts/requirements.txt
-  # Now run the script    
-  python scripts/process.py
+Install the requirements   
+    
+    pip install -r scripts/requirements.txt
+
+Now run the script    
+
+    python scripts/process.py
     
