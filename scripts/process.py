@@ -41,7 +41,7 @@ def extract():
     # somewhere down sheet have blank line then heading for weekly stuff
     for count, r in enumerate(records):
         if r[0] == 'Estimated Weekly Net New Cash Flow':
-            weekly = records[count+1:count+7]
+            weekly = records[count+1:count+5]
             # -1 as blank line above
             monthly = records[:count-1]
 
@@ -51,7 +51,8 @@ def extract():
     writer.writerow(fields)
     writer.writerows(monthly)
 
-    # TODO: we actually need to merge this with the existing data ...
+    # now do the weekly data - have to merge with existing data as they only
+    # give us the latest few weeks
     weeklyfp = 'data/weekly.csv'
     existing = []
     if os.path.exists(weeklyfp):
