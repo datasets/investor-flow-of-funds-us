@@ -47,7 +47,7 @@ def extract():
 
     # here we just overwrite as they seem to append (earliest data still there)
     fo = open('data/monthly.csv', 'w')
-    writer = csv.writer(fo)
+    writer = csv.writer(fo, lineterminator='\n')
     writer.writerow(fields)
     writer.writerows(monthly)
 
@@ -71,7 +71,7 @@ def extract():
             break
 
     fo = open('data/weekly.csv', 'w')
-    writer = csv.writer(fo)
+    writer = csv.writer(fo, lineterminator='\n')
     writer.writerow(fields)
     writer.writerows(weekly)
 
