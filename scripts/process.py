@@ -5,7 +5,7 @@ import os
 
 from dataconverters import xls
 
-url = 'http://www.ici.org/info/flows_data_2014.xls'
+url = 'http://www.ici.org/info/flows_data_2015.xls'
 archive = 'archive/flows_data.xls'
 
 def download():
