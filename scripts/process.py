@@ -41,7 +41,7 @@ def extract():
     # somewhere down sheet have blank line then heading for weekly stuff
     for count, r in enumerate(records):
         if r[0] == 'Estimated Weekly Net New Cash Flow':
-            weekly = records[count+1:count+5]
+            weekly = records[count+1:count+7]
             # -1 as blank line above
             monthly = records[:count-1]
 
@@ -64,12 +64,15 @@ def extract():
     # iterate through existing and add to weekly until we get
     # existing row with date equal to oldest new row and then we break
     oldest_new_week = list(weekly[0])
-    # default weekly to everything in case we do not have an overlap
-    weekly = existing + weekly
+    overlap = False
     for count,row in enumerate(existing):
         if row[0] == oldest_new_week[0]:
+            overlap = True
             weekly = existing[:count] + weekly
             break
+    # default weekly to everything in case we do not have an overlap
+    if not overlap:
+        weekly = existing + weekly
 
     fo = open('data/weekly.csv', 'w')
     writer = csv.writer(fo, lineterminator='\n')
