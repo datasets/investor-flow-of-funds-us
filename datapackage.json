@@ -4,10 +4,13 @@
   "version": "0.1.0",
   "license": "PDDL-1.0",
   "author": "Rufus Pollock (http://rufuspollock.org)",
-  "sources":[{
-    "name": "Investment Company Institute (ICI)",
-    "web": "http://www.ici.org/research/stats"
-  }],
+  "sources": [
+    {
+      "name": "Investment Company Institute (ICI)",
+      "web": "http://www.ici.org/research/stats",
+      "title": "Investment Company Institute (ICI)"
+    }
+  ],
   "resources": [
     {
       "name": "monthly",
@@ -20,7 +23,8 @@
           {
             "name": "Date",
             "type": "date",
-            "description": ""
+            "description": "",
+            "format": "any"
           },
           {
             "name": "Total Equity",
@@ -76,7 +80,8 @@
           {
             "name": "Date",
             "type": "date",
-            "description": ""
+            "description": "",
+            "format": "any"
           },
           {
             "name": "Total Equity",
@@ -124,13 +129,16 @@
   ],
   "views": [
     {
-      "id": "Graph",
-      "label": "Mutual Fund Flows",
-      "type": "Graph",
-      "state": {
-        "graphType": "columns",
+      "name": "graph",
+      "title": "Mutual Fund Flows",
+      "specType": "simple",
+      "spec": {
+        "type": "column",
         "group": "Date",
-        "series": [ "Total Equity", "Total Bond" ]
+        "series": [
+          "Total Equity",
+          "Total Bond"
+        ]
       }
     }
   ]
