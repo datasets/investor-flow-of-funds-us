@@ -23,10 +23,13 @@ Notes for Long-Term Mutual Fund Flows Data:
 Run the python script:
 
 Install the requirements   
-    
-    pip install -r scripts/requirements.txt
-
+```  
+pip install -r scripts/requirements.txt
+```
 Now run the script    
+```
+python scripts/process.py
+```    
+## License
 
-    python scripts/process.py
-    
+This Data Package is licensed by its maintainers under the [Public Domain Dedication and License (PDDL)](http://opendatacommons.org/licenses/pddl/1.0/).
