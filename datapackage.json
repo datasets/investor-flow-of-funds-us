@@ -2,12 +2,18 @@
   "name": "investor-flow-of-funds-us",
   "title": "US Investor Flow of Funds into Investment Classes (Bonds, Equities etc)",
   "version": "0.1.0",
-  "license": "PDDL-1.0",
+  "licenses": [
+    {
+      "name": "ODC-PDDL-1.0",
+      "path": "http://opendatacommons.org/licenses/pddl/",
+      "title": "Open Data Commons Public Domain Dedication and License v1.0"
+    }
+  ],
   "author": "Rufus Pollock (http://rufuspollock.org)",
   "sources": [
     {
       "name": "Investment Company Institute (ICI)",
-      "web": "http://www.ici.org/research/stats",
+      "path": "http://www.ici.org/research/stats",
       "title": "Investment Company Institute (ICI)"
     }
   ],
