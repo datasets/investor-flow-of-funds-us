@@ -140,7 +140,7 @@
       "title": "Mutual Fund Flows",
       "specType": "simple",
       "spec": {
-        "type": "column",
+        "type": "bar",
         "group": "Date",
         "series": [
           "Total Equity",
