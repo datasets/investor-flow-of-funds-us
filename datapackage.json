@@ -34,42 +34,42 @@
           },
           {
             "name": "Total Equity",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Domestic Equity",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "World Equity",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Hybrid",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Total Bond",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Taxable Bond",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Municipal Bond",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Total",
-            "type": "integer",
+            "type": "number",
             "description": ""
           }
         ]
@@ -91,42 +91,42 @@
           },
           {
             "name": "Total Equity",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Domestic Equity",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "World Equity",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Hybrid",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Total Bond",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Taxable Bond",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Municipal Bond",
-            "type": "integer",
+            "type": "number",
             "description": ""
           },
           {
             "name": "Total",
-            "type": "integer",
+            "type": "number",
             "description": ""
           }
         ]
