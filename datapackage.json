@@ -136,7 +136,10 @@
   "views": [
     {
       "name": "graph",
-      "resources": ["monthly", "weekly"],
+      "resources": [
+        "monthly",
+        "weekly"
+      ],
       "title": "Mutual Fund Flows",
       "specType": "simple",
       "spec": {
@@ -148,5 +151,6 @@
         ]
       }
     }
-  ]
+  ],
+  "collection": "economic-data"
 }
