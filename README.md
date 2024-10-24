@@ -1,3 +1,5 @@
+<a href="https://datahub.io/core/investor-flow-of-funds-us"><img src="https://badgen.net/badge/icon/View%20on%20datahub.io/orange?icon=https://datahub.io/datahub-cube-badge-icon.svg&label&scale=1.25)" alt="badge" /></a>
+
 Monthly net new cash flow by US investors into various mutual fund investment
 classes (equities, bonds etc). Statistics come from the Investment Company
 Institute (ICI).
