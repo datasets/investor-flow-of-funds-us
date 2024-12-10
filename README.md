@@ -6,6 +6,7 @@ Institute (ICI).
 
 ## Data
 
+The earliest data comes from 2007 up until today.
 Data comes from the data provided on the [ICI Statistics pages][ici], in
 particular:
 
@@ -32,6 +33,11 @@ Now run the script
 ```
 python scripts/process.py
 ```    
+
+## Automation
+
+Up-to-date (auto-updates every month) investor-flow-of-funds dataset could be found on the datahub.io: https://datahub.io/core/investor-flow-of-funds-us
+
 ## License
 
 This Data Package is licensed by its maintainers under the [Public Domain Dedication and License (PDDL)](http://opendatacommons.org/licenses/pddl/1.0/).
