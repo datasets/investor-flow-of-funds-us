@@ -19,6 +19,16 @@ fields = [
         'Total'
     ]
 
+def resolve_duplicates(df):
+    df['non_null_count'] = df.notnull().sum(axis=1)
+    df = df.sort_values(by=['Date', 'non_null_count'], ascending=[True, False])
+    def pick_relevant_row(group):
+        max_non_null = group['non_null_count'].max()
+        most_complete = group[group['non_null_count'] == max_non_null]
+        return most_complete.iloc[-1]
+    df_cleaned = df.groupby('Date', group_keys=False).apply(pick_relevant_row)
+    return df_cleaned.drop(columns=['non_null_count'])
+
 def download_historical_data():
     for date in range(2011,2021):
         source = 'http://www.ici.org/info/flows_data_%s.xls' % date
@@ -152,6 +162,10 @@ def process():
     # Drop Duplicates
     merged_monthly.drop_duplicates(inplace=True)
     merged_weekly.drop_duplicates(inplace=True)
+
+    # Resolve special duplicates
+    merged_monthly = resolve_duplicates(merged_monthly)
+    merged_weekly = resolve_duplicates(merged_weekly)
 
     # Save to CSV
     merged_monthly.to_csv('data/monthly.csv', index=False)
