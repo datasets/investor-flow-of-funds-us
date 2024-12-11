@@ -43,8 +43,7 @@ jobs:
     - name: Run scripts
       run: |
         source venv/bin/activate
-        cd scripts
-        python process.py
+        python scripts/process.py
 
     - name: Configure Git
       run: |
