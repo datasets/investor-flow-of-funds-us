@@ -1,46 +1,56 @@
 import os
 import shutil
-import requests 
+import requests
 import pandas as pd
+from datetime import datetime
 
-archive = 'archive/'
+archive = "archive/"
 
 pd.options.mode.chained_assignment = None
 
-fields = [ 
-        'Date',
-        'Total Equity',
-        'Domestic Equity',
-        'World Equity',
-        'Hybrid',
-        'Total Bond',
-        'Taxable Bond',
-        'Municipal Bond',
-        'Total'
-    ]
+fields = [
+    "Date",
+    "Total Equity",
+    "Domestic Equity",
+    "World Equity",
+    "Hybrid",
+    "Total Bond",
+    "Taxable Bond",
+    "Municipal Bond",
+    "Total",
+]
+
 
 def resolve_duplicates(df):
-    df['non_null_count'] = df.notnull().sum(axis=1)
-    df = df.sort_values(by=['Date', 'non_null_count'], ascending=[True, False])
+    df["non_null_count"] = df.notnull().sum(axis=1)
+    df = df.sort_values(by=["Date", "non_null_count"], ascending=[True, False])
+
     def pick_relevant_row(group):
-        max_non_null = group['non_null_count'].max()
-        most_complete = group[group['non_null_count'] == max_non_null]
+        max_non_null = group["non_null_count"].max()
+        most_complete = group[group["non_null_count"] == max_non_null]
         return most_complete.iloc[-1]
-    df_cleaned = df.groupby('Date', group_keys=False).apply(pick_relevant_row)
-    return df_cleaned.drop(columns=['non_null_count'])
+
+    df_cleaned = df.groupby("Date", group_keys=False).apply(pick_relevant_row)
+    return df_cleaned.drop(columns=["non_null_count"])
+
 
 def download_historical_data():
-    for date in range(2011,2021):
-        source = 'http://www.ici.org/info/flows_data_%s.xls' % date
-        path = 'archive/flows_data_%s.xls' % date
-        response = requests.get(source)
-        with open(path, 'wb') as f:
+    for date in range(2011, 2021):
+        source = "https://www.ici.org/system/files/%s/flows_data_%s.xls" % (date, date)
+        path = "archive/flows_data_%s.xls" % date
+        response = requests.get(source, timeout=60)
+        if response.status_code != 200:
+            continue
+        with open(path, "wb") as f:
             f.write(response.content)
 
-def download_present_data():
-    base_url = "https://www.ici.org/system/files/{year}-{month:02d}/etf_flows_data_{year}.xls"
 
-    years = range(2021, 2025)  
+def download_present_data():
+    base_url = (
+        "https://www.ici.org/system/files/{year}-{month:02d}/etf_flows_data_{year}.xls"
+    )
+
+    years = range(2021, datetime.utcnow().year + 1)
     months = range(1, 13)
 
     # Check each URL
@@ -48,10 +58,10 @@ def download_present_data():
         for month in months:
             url = base_url.format(year=year, month=month)
             try:
-                response = requests.head(url)
+                response = requests.head(url, timeout=30)
                 if response.status_code == 200:
                     print(f"Downloading {url}")
-                    response = requests.get(url)
+                    response = requests.get(url, timeout=60)
                     with open(f"archive/flows_data_{year}-{month:02d}.xls", "wb") as f:
                         f.write(response.content)
                 else:
@@ -59,37 +69,50 @@ def download_present_data():
             except requests.RequestException as e:
                 print(f"Error checking {year}-{month:02d}: {e}")
 
+
 def standardize_date(date):
-    return pd.to_datetime(date).strftime('%Y-%m-%d')
+    return pd.to_datetime(date).strftime("%Y-%m-%d")
+
 
 def extract_2016_2020(file):
     print(f"Processing {archive + file}")
     df = pd.read_excel(archive + file)
-    df = df.dropna(how='all').reset_index(drop=True)
-    df.rename(columns={
-        'Investment Company Institute': 'Date',
-        'Unnamed: 3': 'Total Equity',
-        'Unnamed: 5': 'Domestic Equity',
-        'Unnamed: 17': 'World Equity',
-        'Unnamed: 23': 'Hybrid',
-        'Unnamed: 25': 'Total Bond',
-        'Unnamed: 27': 'Taxable Bond',
-        'Unnamed: 39': 'Municipal Bond',
-        'Unnamed: 1': 'Total'
-    }, inplace=True)
-    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    df = df.dropna(how="all").reset_index(drop=True)
+    df.rename(
+        columns={
+            "Investment Company Institute": "Date",
+            "Unnamed: 3": "Total Equity",
+            "Unnamed: 5": "Domestic Equity",
+            "Unnamed: 17": "World Equity",
+            "Unnamed: 23": "Hybrid",
+            "Unnamed: 25": "Total Bond",
+            "Unnamed: 27": "Taxable Bond",
+            "Unnamed: 39": "Municipal Bond",
+            "Unnamed: 1": "Total",
+        },
+        inplace=True,
+    )
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     # Find the split points
-    monthly_start = df[df.iloc[:, 0].str.lower().str.contains("monthly", na=False)].index[0]
-    weekly_start = df[df.iloc[:, 0].str.lower().str.contains("weekly", na=False)].index[0]
+    monthly_start = df[
+        df.iloc[:, 0].str.lower().str.contains("monthly", na=False)
+    ].index[0]
+    weekly_start = df[df.iloc[:, 0].str.lower().str.contains("weekly", na=False)].index[
+        0
+    ]
 
     # Extract Monthly and Weekly DataFrames
-    monthly_data = df.iloc[monthly_start+1:weekly_start].dropna(axis=1, how='all')
-    weekly_data = df.iloc[weekly_start+1:].dropna(how='all')
+    monthly_data = df.iloc[monthly_start + 1 : weekly_start].dropna(axis=1, how="all")
+    weekly_data = df.iloc[weekly_start + 1 :].dropna(how="all")
 
-    monthly_data.iloc[:, 0] = pd.to_datetime(monthly_data.iloc[:, 0], errors='coerce').dt.strftime('%Y-%m-%d')
-    monthly_data.dropna(subset=[monthly_data.columns[0]], inplace=True, how='all')
-    weekly_data.iloc[:, 0] = pd.to_datetime(weekly_data.iloc[:, 0], errors='coerce').dt.strftime('%Y-%m-%d')
-    weekly_data.dropna(subset=[weekly_data.columns[0]], inplace=True, how='all')
+    monthly_data.iloc[:, 0] = pd.to_datetime(
+        monthly_data.iloc[:, 0], errors="coerce"
+    ).dt.strftime("%Y-%m-%d")
+    monthly_data.dropna(subset=[monthly_data.columns[0]], inplace=True, how="all")
+    weekly_data.iloc[:, 0] = pd.to_datetime(
+        weekly_data.iloc[:, 0], errors="coerce"
+    ).dt.strftime("%Y-%m-%d")
+    weekly_data.dropna(subset=[weekly_data.columns[0]], inplace=True, how="all")
 
     # Reset index for clarity
     monthly_data.reset_index(drop=True, inplace=True)
@@ -97,18 +120,23 @@ def extract_2016_2020(file):
 
     return monthly_data, weekly_data
 
+
 def extract_all(file):
     print(f"Processing {archive + file}")
     df = pd.read_excel(archive + file)
-    df = df.dropna(how='all').reset_index(drop=True)
+    df = df.dropna(how="all").reset_index(drop=True)
 
     # Find the split points
-    monthly_start = df[df.iloc[:, 0].str.lower().str.contains("monthly", na=False)].index[0]
-    weekly_start = df[df.iloc[:, 0].str.lower().str.contains("weekly", na=False)].index[0]
+    monthly_start = df[
+        df.iloc[:, 0].str.lower().str.contains("monthly", na=False)
+    ].index[0]
+    weekly_start = df[df.iloc[:, 0].str.lower().str.contains("weekly", na=False)].index[
+        0
+    ]
 
     # Extract Monthly and Weekly DataFrames
-    monthly_data = df.iloc[monthly_start+1:weekly_start]
-    weekly_data = df.iloc[weekly_start+1:].dropna(how='all')
+    monthly_data = df.iloc[monthly_start + 1 : weekly_start]
+    weekly_data = df.iloc[weekly_start + 1 :].dropna(how="all")
 
     # Clean column names for both DataFrames
     monthly_data.columns = df.iloc[monthly_start - 1]
@@ -116,26 +144,30 @@ def extract_all(file):
 
     # Handle cases where data has 18 columns
     if len(monthly_data.columns) == 18:
-        monthly_data = monthly_data.iloc[:, :len(fields)]  # Take the first 9 columns
+        monthly_data = monthly_data.iloc[:, : len(fields)]  # Take the first 9 columns
     if len(weekly_data.columns) == 18:
-        weekly_data = weekly_data.iloc[:, :len(fields)]  # Take the first 9 columns
+        weekly_data = weekly_data.iloc[:, : len(fields)]  # Take the first 9 columns
 
     # Assign correct column names
     monthly_data.columns = fields
     weekly_data.columns = fields
 
     # Convert the first column to datetime
-    monthly_data.iloc[:, 0] = pd.to_datetime(monthly_data.iloc[:, 0], errors='coerce').dt.strftime('%Y-%m-%d')
-    monthly_data.dropna(subset=[monthly_data.columns[0]], inplace=True, how='all')
-    weekly_data.iloc[:, 0] = pd.to_datetime(weekly_data.iloc[:, 0], errors='coerce').dt.strftime('%Y-%m-%d')
-    weekly_data.dropna(subset=[weekly_data.columns[0]], inplace=True, how='all')
+    monthly_data.iloc[:, 0] = pd.to_datetime(
+        monthly_data.iloc[:, 0], errors="coerce"
+    ).dt.strftime("%Y-%m-%d")
+    monthly_data.dropna(subset=[monthly_data.columns[0]], inplace=True, how="all")
+    weekly_data.iloc[:, 0] = pd.to_datetime(
+        weekly_data.iloc[:, 0], errors="coerce"
+    ).dt.strftime("%Y-%m-%d")
+    weekly_data.dropna(subset=[weekly_data.columns[0]], inplace=True, how="all")
 
     # Reset index for clarity
     monthly_data.reset_index(drop=True, inplace=True)
     weekly_data.reset_index(drop=True, inplace=True)
 
     return monthly_data, weekly_data
-    
+
 
 def process():
     if not os.path.exists(archive):
@@ -146,7 +178,13 @@ def process():
     merged_monthly = pd.DataFrame(columns=fields)
     merged_weekly = pd.DataFrame(columns=fields)
     for file in list_of_files:
-        if '2016' in file or '2017' in file or '2018' in file or '2019' in file or '2020' in file:
+        if (
+            "2016" in file
+            or "2017" in file
+            or "2018" in file
+            or "2019" in file
+            or "2020" in file
+        ):
             monthly1, weekly1 = extract_2016_2020(file)
             merged_monthly = pd.concat([merged_monthly, monthly1], ignore_index=True)
             merged_weekly = pd.concat([merged_weekly, weekly1], ignore_index=True)
@@ -156,8 +194,8 @@ def process():
             merged_weekly = pd.concat([merged_weekly, weekly2], ignore_index=True)
 
     # Sort by Date
-    merged_monthly.sort_values(by='Date', inplace=True)
-    merged_weekly.sort_values(by='Date', inplace=True)
+    merged_monthly.sort_values(by="Date", inplace=True)
+    merged_weekly.sort_values(by="Date", inplace=True)
 
     # Drop Duplicates
     merged_monthly.drop_duplicates(inplace=True)
@@ -168,12 +206,12 @@ def process():
     merged_weekly = resolve_duplicates(merged_weekly)
 
     # Save to CSV
-    merged_monthly.to_csv('data/monthly.csv', index=False)
-    merged_weekly.to_csv('data/weekly.csv', index=False)
+    merged_monthly.to_csv("data/monthly.csv", index=False)
+    merged_weekly.to_csv("data/weekly.csv", index=False)
 
     # Remove the downloaded files after processing
     shutil.rmtree(archive)
 
-if __name__ == '__main__':
-    process()
 
+if __name__ == "__main__":
+    process()
